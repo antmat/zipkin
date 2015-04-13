@@ -49,7 +49,7 @@ object Zipkin extends Build {
   def scroogeDep(name: String) = "com.twitter" %% ("scrooge-" + name) % scroogeVersion
   def algebird(name: String) = "com.twitter" %% ("algebird-" + name) % algebirdVersion
   def zk(name: String) = "com.twitter.common.zookeeper" % name % zookeeperVersions(name)
-
+  val elastic4s = "com.sksamuel.elastic4s" % "elastic4s_2.10" % "1.5.2"
   val twitterServer = "com.twitter" %% "twitter-server" % "1.9.0"
 
   val proxyRepo = Option(System.getenv("SBT_PROXY_REPO"))
@@ -331,7 +331,7 @@ object Zipkin extends Build {
       base =>
         (base / "config" +++ base / "src" / "test" / "resources").get
     }
-  ).dependsOn(queryCore, cassandra, redis, anormDB, hbase)
+  ).dependsOn(queryCore, cassandra, redis, anormDB, hbase, elastic)
 
   lazy val collectorScribe =
     Project(
@@ -531,6 +531,43 @@ object Zipkin extends Build {
         (base / "config" +++ base / "src" / "test" / "resources").get
     }
   ).dependsOn(scrooge, hbaseTestGuavaHack % "test->compile")
+
+//  lazy val elastic = Project(
+//    id = "zipkin-elastic",
+//    base = file("zipkin-elastic"),
+//    settings = defaultSettings
+//  ).settings(
+//      libraryDependencies ++= Seq(
+//        elastic4s,
+//        finagle("redis"),
+//        util("logging"),
+//        scroogeDep("serializer")
+//      )
+//    ).dependsOn(scrooge)
+
+
+  lazy val elastic = Project(
+    id = "zipkin-elastic",
+    base = file("zipkin-elastic"),
+    settings = defaultSettings
+  ).settings(
+      parallelExecution in Test := false,
+      libraryDependencies ++= Seq(
+        finagle("redis"),
+        util("logging"),
+        scroogeDep("serializer"),
+        "org.slf4j" % "slf4j-log4j12" % "1.6.4" % "runtime",
+        elastic4s
+      ) ++ testDependencies,
+
+      /* Add configs to resource path for ConfigSpec */
+      unmanagedResourceDirectories in Test <<= baseDirectory {
+        base =>
+          (base / "config" +++ base / "src" / "test" / "resources").get
+      }
+    ).dependsOn(scrooge)
+
+
 
   lazy val example = Project(
     id = "zipkin-example",
