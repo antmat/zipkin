@@ -1,0 +1,32 @@
+# #####################################
+# ##### Environment Configuration #####
+# #####################################
+
+# This file gets sourced before the actual bashscript
+# gets executed. You can use this file to provide
+# environment variables
+
+# Available replacements
+# ------------------------------------------------
+# Anton Matveenko <antmat@yandex-team.ru>			debian author
+# zipkin web interface package			debian package description
+# zipkin-web				startup script name
+# /usr/share/zipkin-web			app directory
+# 0			retries for startup
+# 60		retry timeout
+# zipkin-web			normalized app name
+# zipkin-web		daemon user
+# -------------------------------------------------
+
+# Setting JAVA_OPTS
+# -----------------
+# JAVA_OPTS="-Dpidfile.path=/var/run/zipkin-web/play.pid $JAVA_OPTS"
+
+# Setting PIDFILE
+# ---------------
+# PIDFILE="/var/run/zipkin-web/play.pid"
+
+# export env vars for 3rd party libs
+# ----------------------------------
+# COMPANY_API_KEY=123abc
+# export COMPANY_API_KEY

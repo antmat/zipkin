@@ -1,0 +1,2 @@
+/usr/share/zipkin-query-service/conf /etc/zipkin-query-service
+/usr/share/zipkin-query-service/bin/zipkin-query-service /usr/bin/zipkin-query-service

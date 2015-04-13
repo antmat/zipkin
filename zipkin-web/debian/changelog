@@ -1,0 +1,19 @@
+zipkin-web (1.1.0-2) unstable; urgency=low
+
+  * Add cocaine logo. Add trace id on page.
+
+ -- Anton Matveenko <antmat@yandex-team.ru>  Wed, 19 Aug 2015 14:33:10 +0300
+
+zipkin-web (1.1.0-1) unstable; urgency=low
+
+  * Use JavaServerAppPackaging to automatically assign right on log folder and do other stuff.
+
+ -- Anton Matveenko <antmat@yandex-team.ru>  Wed, 19 Aug 2015 14:33:10 +0300
+
+zipkin-web (1.1.0) unstable; urgency=low
+
+  * Initial release
+
+ -- Anton Matveenko <antmat@yandex-team.ru>  Tue, 04 Aug 2015 17:12:10 +0500
+
+

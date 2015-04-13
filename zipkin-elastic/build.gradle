@@ -1,0 +1,10 @@
+test.maxParallelForks = 1
+
+dependencies {
+    compile project(':zipkin-scrooge')
+
+    compile "com.sksamuel.elastic4s:elastic4s_2.10:1.5.10"
+
+    // for SpanStoreSpec
+    testCompile project(':zipkin-common').sourceSets.test.output
+}

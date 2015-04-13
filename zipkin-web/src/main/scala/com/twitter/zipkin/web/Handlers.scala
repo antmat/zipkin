@@ -289,6 +289,7 @@ class Handlers(mustacheGenerator: ZipkinMustache, queryExtractor: QueryExtractor
   }
 
   private[this] def renderTrace(trace: List[Span]): Renderer = {
+    val traceId = trace.headOption.map(_.id).getOrElse(0L)
     val traceTimestamp = trace.headOption.flatMap(_.timestamp).getOrElse(0L)
     val traceDuration = Trace.duration(trace).getOrElse(0L)
     val spanDepths = TraceSummary.toSpanDepths(trace)
@@ -352,8 +353,8 @@ class Handlers(mustacheGenerator: ZipkinMustache, queryExtractor: QueryExtractor
 
     val timeMarkersBackup = timeMarkers.map { m => collection.mutable.Map() ++ m }
     val spansBackup = spans.map { m => collection.mutable.Map() ++ m }
-
     val data = Map[String, Object](
+      "traceId" -> traceId.toHexString,
       "duration" -> durationStr(traceDuration),
       "services" -> serviceDurations.map(_.size),
       "depth" -> spanDepths.values.reduceOption(_ max _),

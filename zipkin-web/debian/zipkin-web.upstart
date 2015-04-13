@@ -1,0 +1,31 @@
+description "zipkin web interface package"
+author "Anton Matveenko <antmat@yandex-team.ru>"
+
+# Stanzas
+#
+# Stanzas control when and how a process is started and stopped
+# See a list of stanzas here: http://upstart.ubuntu.com/wiki/Stanzas#respawn
+
+# When to start the service
+start on runlevel [2345]
+
+
+# When to stop the service
+stop on runlevel [016]
+
+
+# Automatically restart process if crashed. 
+respawn
+respawn limit 10 60
+
+pre-start script
+        [ -d /var/run/zipkin-web ] || install -m 755 -o zipkin-web -g zipkin-web -d /var/run/zipkin-web
+end script
+
+# set the working directory of the job processes
+chdir /usr/share/zipkin-web
+
+# Start the process
+script
+  exec sudo -u zipkin-web /usr/bin/zipkin-web
+end script

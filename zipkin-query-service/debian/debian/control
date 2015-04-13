@@ -1,0 +1,16 @@
+Source: zipkin-query-service
+Section: java
+Priority: optional
+Maintainer: Anton Matveenko <antmat@me.com>
+Build-Depends: debhelper (>= 9),
+               javahelper
+Standards-Version: 3.9.6
+Vcs-Git: https://github.com/antmat/zipkin.git 
+Vcs-Browser: https://github.com/antmat/zipkin
+
+Package: zipkin-query-service
+Architecture: all
+Depends: ${misc:Depends}
+Description: zipkin-query-service
+
+

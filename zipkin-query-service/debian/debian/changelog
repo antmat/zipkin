@@ -1,0 +1,38 @@
+zipkin-query-service (1.1.0-5) unstable; urgency=low
+
+  * fix for null span_name.
+  * fix for trace_id from previous day
+
+ -- Anton Matveenko <antmat@yandex-team.ru>  Tue, 20 Oct 2015 12:12:10 +0300
+
+zipkin-query-service (1.1.0-4) unstable; urgency=low
+
+  * Really use hex traces. Avoid nullptr in service name.
+
+ -- Anton Matveenko <antmat@yandex-team.ru>  Thu, 20 Aug 2015 13:21:10 +0300
+
+zipkin-query-service (1.1.0-3) unstable; urgency=low
+
+  * Use hex traces. Configurable parser.
+
+ -- Anton Matveenko <antmat@yandex-team.ru>  Thu, 20 Aug 2015 13:21:10 +0300
+
+zipkin-query-service (1.1.0-2) unstable; urgency=low
+
+  * Fix exeception on overflowed trace_id values.
+
+ -- Anton Matveenko <antmat@yandex-team.ru>  Thu, 20 Aug 2015 13:21:10 +0300
+
+zipkin-query-service (1.1.0-1) unstable; urgency=low
+
+  * Use es connection string and prefer ipv6
+
+ -- Anton Matveenko <antmat@yandex-team.ru>  Tue, 04 Aug 2015 17:12:10 +0500
+
+zipkin-query-service (1.1.0) unstable; urgency=low
+
+  * Initial release
+
+ -- Anton Matveenko <antmat@yandex-team.ru>  Tue, 04 Aug 2015 17:12:10 +0500
+
+

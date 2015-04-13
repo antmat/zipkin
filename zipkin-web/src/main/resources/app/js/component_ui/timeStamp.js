@@ -11,7 +11,7 @@ define(
 
     function timeStamp() {
       this.init = function () {
-        this.$timestamp = this.$node.find("[name=timestamp]");
+        this.$timestamp = this.$node.find("[name=endTs]");
         this.$date = this.$node.find(".date-input");
         this.$time = this.$node.find(".time-input");
         var ts = this.$timestamp.val();

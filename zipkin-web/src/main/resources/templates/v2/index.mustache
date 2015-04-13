@@ -26,13 +26,13 @@
     </div>
 
     <div class="form-group">
-      <label for="minDuration">Duration (μs) >=</label>
-      <input class="form-control input-sm" id="minDuration" name="minDuration" type="text" value="{{minDuration}}">
+      <label for="limit">Limit</label>
+      <input class="form-control input-sm" id="limit" name="limit" type="text" value="{{limit}}">
     </div>
 
     <div class="form-group">
-      <label for="limit">Limit</label>
-      <input class="form-control input-sm" id="limit" name="limit" type="text" value="{{limit}}">
+      <label for="minDuration"><abbr title="First fetch a reasonable bunch of traces and then choose traces with longest duration">Sort by duration(slow)</abbr></label>
+      <input type="checkbox" value="1" id="minDuration" name="minDuration">
     </div>
 
     <button type="submit" class="btn btn-default btn-sm">Find Traces</button>

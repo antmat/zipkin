@@ -1,0 +1,32 @@
+# #####################################
+# ##### Environment Configuration #####
+# #####################################
+
+# This file gets sourced before the actual bashscript
+# gets executed. You can use this file to provide
+# environment variables
+
+# Available replacements
+# ------------------------------------------------
+# Anton Matveenko <antmat@yandex-team.ru>			debian author
+# zipkin query backend			debian package description
+# zipkin-query-service				startup script name
+# /usr/share/zipkin-query-service			app directory
+# 0			retries for startup
+# 60		retry timeout
+# zipkin-query-service			normalized app name
+# zipkin-query-service		daemon user
+# -------------------------------------------------
+
+# Setting JAVA_OPTS
+# -----------------
+# JAVA_OPTS="-Dpidfile.path=/var/run/zipkin-query-service/play.pid $JAVA_OPTS"
+
+# Setting PIDFILE
+# ---------------
+# PIDFILE="/var/run/zipkin-query-service/play.pid"
+
+# export env vars for 3rd party libs
+# ----------------------------------
+# COMPANY_API_KEY=123abc
+# export COMPANY_API_KEY
