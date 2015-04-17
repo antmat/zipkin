@@ -36,7 +36,7 @@ import scala.concurrent.{Future => ScalaFuture, Promise => ScalaPromise, Executi
 import scala.util.{Success, Failure}
 import scala.collection.GenTraversableOnce
 import scala.collection.JavaConverters._
-
+import scala.NotImplementedError
 import org.elasticsearch.common.settings
 
 trait ElasticIndex extends Index {
@@ -53,8 +53,11 @@ trait ElasticIndex extends Index {
 
     elastic.ScalaFutureOps(elastic.client.execute(
     {
-      search in elastic.get_index() query "service_name:"+serviceName aggs(
-        agg terms "trace_id" field "trace_id"
+      search in elastic.get_index() query
+        "service_name:"+serviceName postFilter
+        rangeFilter("@timestamp").lte(elastic.ts_format(endTs)) sort
+        (by field "@timestamp") aggs(
+        agg terms "trace_id" field "trace_id" size (limit)
         aggs(
           agg min "ts" field "@timestamp"
           )
@@ -75,6 +78,7 @@ trait ElasticIndex extends Index {
   }
   override def getTraceIdsByAnnotation(serviceName: String, annotation: String, value: Option[ByteBuffer],
                                        endTs: Long, limit: Int): Future[Seq[IndexedTraceId]] = {
+    throw new NotImplementedError
     elastic.log.debug("getTraceIdsByAnnotation")
     elastic.ScalaFutureOps(elastic.client.execute(
       { search in "" query "" aggs(agg terms "trace_id")}
@@ -88,6 +92,7 @@ trait ElasticIndex extends Index {
   }
 
   override def getTracesDuration(traceIds: Seq[Long]): Future[Seq[TraceIdDuration]] = {
+    throw new NotImplementedError
     elastic.log.debug("getTracesDuration")
     elastic.ScalaFutureOps(elastic.client.execute(
       { search in elastic.get_index() query "" aggs(agg terms "trace_id")}
@@ -149,6 +154,7 @@ trait ElasticIndex extends Index {
   }
 
   override def indexTraceIdByServiceAndName(span: Span) : Future[Unit] = {
+    throw new NotImplementedError
     elastic.log.debug("indexTraceIdByServiceAndName")
     elastic.ScalaFutureOps(elastic.client.execute(
     { search in "" query "" aggs(agg terms "trace_id")}
@@ -162,6 +168,7 @@ trait ElasticIndex extends Index {
   }
 
   override def indexSpanByAnnotations(span: Span) : Future[Unit] = {
+    throw new NotImplementedError
     elastic.log.debug("indexSpanByAnnotations")
     elastic.ScalaFutureOps(elastic.client.execute(
     { search in "" query "" aggs(agg terms "trace_id")}
@@ -175,6 +182,7 @@ trait ElasticIndex extends Index {
   }
 
   override def indexServiceName(span: Span): Future[Unit] = {
+    throw new NotImplementedError
     elastic.log.debug("indexServiceName")
     elastic.ScalaFutureOps(elastic.client.execute(
     { search in "" query "" aggs(agg terms "trace_id")}
@@ -188,6 +196,7 @@ trait ElasticIndex extends Index {
   }
 
   override def indexSpanNameByService(span: Span): Future[Unit] = {
+    throw new NotImplementedError
     elastic.log.debug("indexSpanNameByService")
     elastic.ScalaFutureOps(elastic.client.execute(
     { search in "" query "" aggs(agg terms "trace_id")}
@@ -201,6 +210,7 @@ trait ElasticIndex extends Index {
   }
 
   override def indexSpanDuration(span: Span): Future[Unit] = {
+    throw new NotImplementedError
     elastic.log.debug("indexSpanDuration")
     elastic.ScalaFutureOps(elastic.client.execute(
     { search in "" query "" aggs(agg terms "trace_id")}

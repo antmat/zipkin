@@ -1,8 +1,7 @@
 package com.twitter.zipkin.storage.elastic
 
 import java.text.SimpleDateFormat
-import java.time.ZoneId
-import java.util.{TimeZone, Calendar}
+import java.util.{TimeZone, Calendar, Date, HashMap}
 
 import com.sksamuel.elastic4s.ElasticClient
 import com.twitter.logging.Logger
@@ -44,12 +43,24 @@ class Common {
   }
 
   def ts_convert(sh: SearchHit): Long = {
+    val r_ts = sh.sourceAsMap().get("fields").asInstanceOf[HashMap[String, Object]].get("real_timestamp").asInstanceOf[Long]
+    if(r_ts != 0) {
+      r_ts
+    }
+    else {
+      val simpleDateFormat = new SimpleDateFormat("y-M-d'T'H:m:s.S")
+      simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+      var ts = sh.sourceAsMap().get("timestamp").asInstanceOf[String];
+      val us = ts.substring(ts.size - 3)
+      ts = ts.substring(0, ts.size - 3)
+      simpleDateFormat.parse(ts).getTime * 1000 + us.toLong
+    }
+  }
+
+  def ts_format(ts: Long): String = {
     val simpleDateFormat = new SimpleDateFormat("y-M-d'T'H:m:s.S")
     simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-    var ts = sh.sourceAsMap().get("timestamp").asInstanceOf[String];
-    val us = ts.substring(ts.size-3)
-    ts = ts.substring(0, ts.size-3)
-    simpleDateFormat.parse(ts).getTime * 1000 + us.toLong
+    simpleDateFormat.format(new Date(ts/1000))
   }
 
 }

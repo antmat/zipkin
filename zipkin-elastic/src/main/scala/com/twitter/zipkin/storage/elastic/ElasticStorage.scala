@@ -17,9 +17,7 @@
 package com.twitter.zipkin.storage.elastic
 
 import java.text.SimpleDateFormat
-import java.time.format.{ResolverStyle, SignStyle, DateTimeFormatterBuilder, DateTimeFormatter}
-import java.util
-import java.util.{Calendar, Date}
+import java.util.{Calendar, Date, HashMap}
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.twitter.util.{Promise, Future, Duration}
@@ -38,6 +36,7 @@ trait ElasticStorage extends Storage {
 
 
   override def storeSpan(span: Span): Future[Unit] = {
+    throw new NotImplementedError
     elastic.log.debug("storeSpan")
     elastic.ScalaFutureOps(elastic.client.execute(
     { index into "" -> "" fields {"" -> ""}}
@@ -45,6 +44,7 @@ trait ElasticStorage extends Storage {
   }
 
   override def setTimeToLive(traceId: Long, ttl: Duration): Future[Unit] = {
+    throw new NotImplementedError
     elastic.log.debug("setTimeToLive")
     elastic.ScalaFutureOps(elastic.client.execute(
     { index into "" -> "" fields {"" -> ""}}
@@ -52,6 +52,7 @@ trait ElasticStorage extends Storage {
   }
 
   override def getTimeToLive(traceId: Long): Future[Duration] = {
+    throw new NotImplementedError
     elastic.log.debug("getTimeToLive")
     elastic.ScalaFutureOps(elastic.client.execute(
     { index into "" -> "" fields {"" -> ""}}
@@ -73,13 +74,13 @@ trait ElasticStorage extends Storage {
   private[this] def fetchTraceById(traceId: Long): Future[Option[Seq[Span]]] = {
     elastic.log.debug("fetchTraceById: "+ traceId)
     elastic.ScalaFutureOps(elastic.client.execute(
-      { search in elastic.get_index() query "trace_id:"+traceId }
+      { search in elastic.get_index() query "trace_id:"+traceId limit(10000)}
     ) ).asTwitter(elastic.ec) map {
       sr =>
         Some(sr.getHits().hits().map(
           sh => {
             val b = Seq.newBuilder[Span]
-            val map = sh.sourceAsMap().get("fields").asInstanceOf[util.HashMap[String, Object]]
+            val map = sh.sourceAsMap().get("fields").asInstanceOf[HashMap[String, Object]]
             val p_id = map.get("parent_id")
             var parent_id: Option[Long] = None
             if (p_id != null) {
@@ -111,11 +112,13 @@ trait ElasticStorage extends Storage {
   }
 
   override def getDataTimeToLive: Int = {
+    throw new NotImplementedError
     elastic.log.debug("getDataTimeToLive")
     42
   }
 
   override def tracesExist(traceIds: Seq[Long]): Future[Set[Long]] = {
+    throw new NotImplementedError
     elastic.log.debug("tracesExist")
     Future.value(Set.empty)
   }

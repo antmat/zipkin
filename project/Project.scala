@@ -15,6 +15,8 @@
  *
  */
 import com.twitter.sbt.{BuildProperties,PackageDist,GitProject}
+import com.typesafe.sbt.packager.linux.LinuxPlugin
+import com.typesafe.sbt.packager.debian.DebianPlugin
 import sbt._
 import com.twitter.scrooge.ScroogeSBT
 import sbt.Keys._
@@ -24,6 +26,7 @@ import sbtassembly.Plugin._
 import AssemblyKeys._
 import com.typesafe.sbt.SbtSite.site
 import com.typesafe.sbt.site.SphinxSupport.Sphinx
+import com.typesafe.sbt.SbtNativePackager.autoImport._
 
 object Zipkin extends Build {
   val zipkinVersion = "1.2.0-SNAPSHOT"
