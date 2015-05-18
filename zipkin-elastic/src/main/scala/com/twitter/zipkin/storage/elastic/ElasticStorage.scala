@@ -28,7 +28,7 @@ import scala.util.{Failure, Success}
 
 trait ElasticStorage extends Storage {
 
-  val elastic = new Common
+  val elastic: Common
 
   override def close() = {
     elastic.client.close()

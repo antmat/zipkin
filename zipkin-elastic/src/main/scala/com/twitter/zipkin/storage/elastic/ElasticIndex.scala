@@ -41,7 +41,7 @@ import org.elasticsearch.common.settings
 
 trait ElasticIndex extends Index {
 
-  val elastic = new Common
+  val elastic: Common
 
   override def close() = {
     elastic.client.close()
@@ -49,7 +49,7 @@ trait ElasticIndex extends Index {
 
   override def getTraceIdsByName(serviceName: String, span: Option[String],
                                  endTs: Long, limit: Int): Future[Seq[IndexedTraceId]] = {
-    elastic.log.debug("getTraceIdsByName: " + serviceName + ", span: " + span)
+    elastic.log.debug("getTraceIdsByName: " + serviceName + ", span: " + span + ", limit: " + limit.toString);
 
     elastic.ScalaFutureOps(elastic.client.execute(
     {

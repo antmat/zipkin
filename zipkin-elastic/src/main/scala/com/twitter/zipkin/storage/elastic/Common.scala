@@ -12,15 +12,23 @@ import org.elasticsearch.search.SearchHit
 import scala.concurrent.{ExecutionContext, Future => ScalaFuture, Promise => ScalaPromise}
 import scala.util.{Failure, Success}
 
-class Common {
+class Common (
+               cluster_name: String,
+               index_format: String,
+               host: String,
+               port: Int
+               ){
   
   val ec: ExecutionContext = ExecutionContext.global
   val client: ElasticClient = ElasticClient.remote(
-    ImmutableSettings.builder().put("cluster.name", "elasticsearch_antmat").build(),
-    "127.0.0.1",
-    9301
+    ImmutableSettings.builder().put("cluster.name", cluster_name).build(),
+    host,
+    port
   )
+
   val log = Logger.get(getClass.getName)
+
+  val format = new SimpleDateFormat(index_format)
 
   implicit class ScalaFutureOps[A](sf: ScalaFuture[A]) {
     def asTwitter(implicit ec: ExecutionContext): Future[A] = {
@@ -37,9 +45,16 @@ class Common {
 
   def get_index(): String = {
     val today = Calendar.getInstance().getTime()
-    val format = new SimpleDateFormat("yyyy.MM.dd")
+
 //    log.debug("FORMAT" + "logstash-" + format.format(today))
     "logstash-" + format.format(today)
+  }
+
+  def get_index(time_ms:Long): String = {
+    val d = new Date().setTime(time_ms)
+    val format = new SimpleDateFormat("yyyy.MM.dd")
+    //    log.debug("FORMAT" + "logstash-" + format.format(today))
+    "logstash-" + format.format(d)
   }
 
   def ts_convert(sh: SearchHit): Long = {

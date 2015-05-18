@@ -21,11 +21,15 @@ import com.twitter.zipkin.builder.Builder
 import com.twitter.zipkin.storage.Storage
 import com.twitter.util.Await
 import com.twitter.util.Future
-import com.twitter.zipkin.storage.elastic.ElasticStorage
+import com.twitter.zipkin.storage.elastic.{Common, ElasticStorage}
 
-case class StorageBuilder() extends Builder[Storage] { self =>
+case class StorageBuilder(cluster_name: String,
+                          index_format: String,
+                          host: String,
+                          port: Int) extends Builder[Storage] { self =>
 
   def apply() = {
-    Await.result(Future.value(new ElasticStorage {}), 10.seconds)
+    val elastic = new Common(cluster_name, index_format, host, port)
+    Await.result(Future.value(new ElasticStorage { val elastic = elastic}), 10.seconds)
   }
 }
