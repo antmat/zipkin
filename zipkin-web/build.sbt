@@ -1,4 +1,10 @@
-enablePlugins(JavaAppPackaging)
+enablePlugins(JavaServerAppPackaging)
+
+javaOptions in Universal ++= Seq(
+  "-zipkin.web.port=:8888",
+  "-log.append=true",
+  "-log.output='/var/log/zipkin-web/zipkin-web.log'"
+)
 
 name := "zipkin-web"
 

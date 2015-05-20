@@ -29,7 +29,7 @@ case class StorageBuilder(cluster_name: String,
                           port: Int) extends Builder[Storage] { self =>
 
   def apply() = {
-    val elastic = new Common(cluster_name, index_format, host, port)
-    Await.result(Future.value(new ElasticStorage { val elastic = elastic}), 10.seconds)
+    val el = new Common(cluster_name, index_format, host, port)
+    Await.result(Future.value(new ElasticStorage { val elastic = el}), 10.seconds)
   }
 }

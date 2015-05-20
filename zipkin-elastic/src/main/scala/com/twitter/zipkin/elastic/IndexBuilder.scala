@@ -32,7 +32,7 @@ case class IndexBuilder(cluster_name: String,
                         port: Int) extends Builder[Index] { self =>
 
   def apply() = {
-    val elastic = new Common(cluster_name, index_format, host, port)
-    Await.result(Future.value(new ElasticIndex {val elastic = elastic}), 10.seconds)
+    val el = new Common(cluster_name, index_format, host, port)
+    Await.result(Future.value(new ElasticIndex {val elastic = el}), 10.seconds)
   }
 }

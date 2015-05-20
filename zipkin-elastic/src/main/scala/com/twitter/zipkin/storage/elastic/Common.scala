@@ -47,14 +47,13 @@ class Common (
     val today = Calendar.getInstance().getTime()
 
 //    log.debug("FORMAT" + "logstash-" + format.format(today))
-    "logstash-" + format.format(today)
+    format.format(today)
   }
 
   def get_index(time_ms:Long): String = {
     val d = new Date().setTime(time_ms)
-    val format = new SimpleDateFormat("yyyy.MM.dd")
     //    log.debug("FORMAT" + "logstash-" + format.format(today))
-    "logstash-" + format.format(d)
+    format.format(d)
   }
 
   def ts_convert(sh: SearchHit): Long = {

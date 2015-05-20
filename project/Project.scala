@@ -52,7 +52,7 @@ object Zipkin extends Build {
   def scroogeDep(name: String) = "com.twitter" %% ("scrooge-" + name) % scroogeVersion
   def algebird(name: String) = "com.twitter" %% ("algebird-" + name) % algebirdVersion
   def zk(name: String) = "com.twitter.common.zookeeper" % name % zookeeperVersions(name)
-  val elastic4s = "com.sksamuel.elastic4s" % "elastic4s_2.10" % "1.5.2"
+  val elastic4s = "com.sksamuel.elastic4s" % "elastic4s_2.10" % "1.4.13"
   val twitterServer = "com.twitter" %% "twitter-server" % "1.9.0"
 
   val proxyRepo = Option(System.getenv("SBT_PROXY_REPO"))
