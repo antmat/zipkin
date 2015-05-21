@@ -53,7 +53,7 @@ trait ElasticIndex extends Index {
 
     elastic.ScalaFutureOps(elastic.client.execute(
     {
-      search in elastic.get_index() query
+      search in elastic.get_index(endTs) query
         "service_name:"+serviceName postFilter
         rangeFilter("@timestamp").lte(elastic.ts_format(endTs)) sort
         (by field "@timestamp") aggs(
@@ -68,7 +68,12 @@ trait ElasticIndex extends Index {
         val ag = sr.getAggregations().get("trace_id").asInstanceOf[Terms]
         ag.getBuckets.asScala.map (
           b => {
+            //1.5 version
             val t_id = IndexedTraceId(b.getKeyAsNumber.longValue(), b.getAggregations().get("ts").asInstanceOf[Min].value().toLong)
+
+            //1.4 version
+//            val t_id = IndexedTraceId(b.getKeyAsNumber.longValue(), b.getAggregations().get("ts").asInstanceOf[Min].getValue().toLong)
+            
             elastic.log.debug("TraceID:" + t_id.timestamp + "," + t_id.traceId)
             t_id
           }
@@ -119,14 +124,20 @@ trait ElasticIndex extends Index {
     }
     ) ).asTwitter(elastic.ec) map {
       sr => {
-//        log.debug("SR:" + sr.toString)
-        val ag = sr.getAggregations().get("service_name").asInstanceOf[StringTerms]
-        ag.getBuckets.asScala.map (
-          b => {
-//            log.debug("B:" + b.getKey)
-            b.getKey
-          }
-        ).toSet
+//        elastic.log.debug("SR:" + sr.toString)
+        if(sr.getAggregations().get("service_name").isInstanceOf[StringTerms]) {
+          val ag = sr.getAggregations().get("service_name").asInstanceOf[StringTerms]
+          ag.getBuckets.asScala.map(
+            b => {
+//              elastic.log.debug("B:" + b.getKey)
+              b.getKey
+            }
+          ).toSet
+        }
+        else {
+//          elastic.log.debug("Empty aggregation found")
+          Set.empty[String]
+        }
       }
     }
   }
@@ -155,6 +166,7 @@ trait ElasticIndex extends Index {
 
   override def indexTraceIdByServiceAndName(span: Span) : Future[Unit] = {
     throw new NotImplementedError
+
     elastic.log.debug("indexTraceIdByServiceAndName")
     elastic.ScalaFutureOps(elastic.client.execute(
     { search in "" query "" aggs(agg terms "trace_id")}
