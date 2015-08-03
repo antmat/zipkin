@@ -22,6 +22,7 @@ import java.util.{Calendar, Date, HashMap}
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.twitter.util.{Promise, Future, Duration}
 import com.twitter.zipkin.common.{Endpoint, Annotation, Span}
+import com.twitter.zipkin.elastic.Common
 import com.twitter.zipkin.storage.{IndexedTraceId, Storage}
 
 import scala.util.{Failure, Success}
@@ -74,14 +75,14 @@ trait ElasticStorage extends Storage {
   private[this] def fetchTraceById(traceId: Long): Future[Option[Seq[Span]]] = {
     elastic.log.debug("fetchTraceById: "+ traceId)
     elastic.ScalaFutureOps(elastic.client.execute(
-      { search in elastic.get_index() query "trace_id:"+traceId limit(10000)}
+      { search in elastic.get_index() query elastic.trace_id_field+":"+traceId limit(10000)}
     ) ).asTwitter(elastic.ec) map {
       sr =>
         Some(sr.getHits().hits().map(
           sh => {
             val b = Seq.newBuilder[Span]
             val map = sh.sourceAsMap().get("fields").asInstanceOf[HashMap[String, Object]]
-            val p_id = map.get("parent_id")
+            val p_id = map.get(elastic.parent_id_field)
             var parent_id: Option[Long] = None
             if (p_id != null) {
               val p_id_val = p_id.asInstanceOf[Number].longValue()
@@ -92,14 +93,15 @@ trait ElasticStorage extends Storage {
             val ann_builder = List.newBuilder[Annotation]
             ann_builder += new Annotation(
               elastic.ts_convert(sh),
-              sh.sourceAsMap().get("message").asInstanceOf[String],
-              Some(Endpoint(0, 0, map.get("service_name").asInstanceOf[String])),
+              sh.sourceAsMap().get(elastic.message_field).asInstanceOf[String],
+              Some(Endpoint(0, 0, map.get(elastic.service_name_field).asInstanceOf[String])),
               None
             )
+            elastic.log.debug("SH:"+ sh.sourceAsMap().toString);
             val span = Span(
-              map.get("trace_id").asInstanceOf[Number].longValue(),
-              map.get("span_name").asInstanceOf[String],
-              map.get("span_id").asInstanceOf[Number].longValue(),
+              map.get(elastic.trace_id_field).asInstanceOf[Number].longValue(),
+              map.get(elastic.span_name_field).asInstanceOf[String],
+              map.get(elastic.span_id_field).asInstanceOf[Number].longValue(),
               parent_id,
               ann_builder.result(),
               Seq.empty

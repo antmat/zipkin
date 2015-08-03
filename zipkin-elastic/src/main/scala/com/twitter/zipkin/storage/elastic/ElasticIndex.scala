@@ -21,6 +21,7 @@ import com.twitter.logging.Logger
 
 import com.twitter.util._
 import com.twitter.zipkin.common.{AnnotationType, BinaryAnnotation, Span}
+import com.twitter.zipkin.elastic.Common
 import com.twitter.zipkin.storage.{TraceIdDuration, IndexedTraceId, Index}
 import java.nio.ByteBuffer
 import org.elasticsearch.action.search.SearchResponse
@@ -54,18 +55,18 @@ trait ElasticIndex extends Index {
     elastic.ScalaFutureOps(elastic.client.execute(
     {
       search in elastic.get_index(endTs) query
-        "service_name:"+serviceName postFilter
-        rangeFilter("@timestamp").lte(elastic.ts_format(endTs)) sort
-        (by field "@timestamp") aggs(
-        agg terms "trace_id" field "trace_id" size (limit)
+        elastic.service_name_field+":"+serviceName postFilter
+        rangeFilter(elastic.timestamp_field).lte(elastic.ts_format(endTs)) sort
+        (by field elastic.timestamp_field) aggs(
+        agg terms elastic.trace_id_field field elastic.trace_id_field size (limit)
         aggs(
-          agg min "ts" field "@timestamp"
+          agg min "ts" field elastic.timestamp_field
           )
         ) searchType SearchType.Count
     }
     ) ).asTwitter(elastic.ec) map {
       sr => {
-        val ag = sr.getAggregations().get("trace_id").asInstanceOf[Terms]
+        val ag = sr.getAggregations().get(elastic.trace_id_field).asInstanceOf[Terms]
         ag.getBuckets.asScala.map (
           b => {
             //1.5 version
@@ -73,7 +74,6 @@ trait ElasticIndex extends Index {
 
             //1.4 version
 //            val t_id = IndexedTraceId(b.getKeyAsNumber.longValue(), b.getAggregations().get("ts").asInstanceOf[Min].getValue().toLong)
-            
             elastic.log.debug("TraceID:" + t_id.timestamp + "," + t_id.traceId)
             t_id
           }
@@ -118,24 +118,24 @@ trait ElasticIndex extends Index {
     elastic.log.debug("getServiceNames")
     elastic.ScalaFutureOps(elastic.client.execute(
     {
-      search in elastic.get_index() query "service_name:*" aggs(
-          agg terms "service_name" field "service_name"
+      search in elastic.get_index() query elastic.service_name_field + ":*" aggs(
+          agg terms elastic.service_name_field field elastic.service_name_field
         ) searchType SearchType.Count
     }
     ) ).asTwitter(elastic.ec) map {
       sr => {
-//        elastic.log.debug("SR:" + sr.toString)
-        if(sr.getAggregations().get("service_name").isInstanceOf[StringTerms]) {
-          val ag = sr.getAggregations().get("service_name").asInstanceOf[StringTerms]
+        elastic.log.debug("SR:" + sr.toString)
+        if(sr.getAggregations().get(elastic.service_name_field).isInstanceOf[StringTerms]) {
+          val ag = sr.getAggregations().get(elastic.service_name_field).asInstanceOf[StringTerms]
           ag.getBuckets.asScala.map(
             b => {
-//              elastic.log.debug("B:" + b.getKey)
+              elastic.log.debug("B:" + b.getKey)
               b.getKey
             }
           ).toSet
         }
         else {
-//          elastic.log.debug("Empty aggregation found")
+          elastic.log.debug("Empty aggregation found")
           Set.empty[String]
         }
       }
@@ -146,17 +146,17 @@ trait ElasticIndex extends Index {
     elastic.log.debug("getSpanNames")
     elastic.ScalaFutureOps(elastic.client.execute(
     {
-      search in elastic.get_index() query "span_name:*" aggs(
-        agg terms "span_name" field "span_name"
+      search in elastic.get_index() query elastic.span_name_field + ":*" aggs(
+        agg terms elastic.span_name_field field elastic.span_name_field
         ) searchType SearchType.Count
     }
     ) ).asTwitter(elastic.ec) map {
       sr => {
-//        log.debug("SR:" + sr.toString)
-        val ag = sr.getAggregations().get("span_name").asInstanceOf[StringTerms]
+        elastic.log.debug("SR:" + sr.toString)
+        val ag = sr.getAggregations().get(elastic.span_name_field).asInstanceOf[StringTerms]
         ag.getBuckets.asScala.map (
           b => {
-//            log.debug("B:" + b.getKey)
+            elastic.log.debug("B:" + b.getKey)
             b.getKey
           }
         ).toSet

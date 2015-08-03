@@ -22,17 +22,13 @@ import com.twitter.util.Await
 import com.twitter.util.Future
 import com.twitter.zipkin.builder.Builder
 import com.twitter.zipkin.storage.Index
-import com.twitter.zipkin.storage.elastic.{Common, ElasticIndex}
+import com.twitter.zipkin.storage.elastic.ElasticIndex
 import com.sksamuel.elastic4s.ElasticClient
 import com.sksamuel.elastic4s.ElasticDsl._
 
-case class IndexBuilder(cluster_name: String,
-                        index_format: String,
-                        host: String,
-                        port: Int) extends Builder[Index] { self =>
+case class IndexBuilder(el: Common) extends Builder[Index] { self =>
 
   def apply() = {
-    val el = new Common(cluster_name, index_format, host, port)
     Await.result(Future.value(new ElasticIndex {val elastic = el}), 10.seconds)
   }
 }
