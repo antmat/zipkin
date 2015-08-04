@@ -14,6 +14,8 @@ maintainer := "Anton Matveenko <antmat@yandex-team.ru>"
 
 packageSummary := "zipkin query backend"
 
+debianChangelog := Some(file("zipkin-query-service/changelog"))
+
 packageDescription := "Zipkin backend to fetch span data"
 
 debianPackageDependencies := Seq.newBuilder[String].+=("oracle-j2sdk1.7").result()

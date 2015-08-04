@@ -16,23 +16,21 @@ object ts_traits {
 
 
 val el = new Common(
-  "ape-test-cloud",
-  "'test12ape-rsyslog-'yyyy-MM-dd",
-  "elastic01d.tst.ape",
-  9300,
-  "/var/log/zipkin-query-service/query-service.log",
-  Some(Level.ALL),
-  "@timestamp",
-  "trace_id",
-  "span_id",
-  "parent_id",
-  "rpc_name",
-  "service_name",
-  "real_timestamp",
-  "@message",
-  "y-M-d'T'H:m:s.S",
-  ts_traits.default_us_extractor,
-  ts_traits.default_ts_filter
+  cluster_name = "ape-test-cloud",
+  index_format = "'test12ape-rsyslog-'yyyy-MM-dd",
+  host = "elastic01d.tst.ape",
+  port = 9300,
+  timestamp_field = "@timestamp",
+  trace_id_field = "trace_id",
+  span_id_field = "span_id",
+  parent_id_field = "parent_id",
+  span_name_field = "rpc_name",
+  service_name_field = "service_name",
+  real_timestamp_field = "real_timestamp",
+  message_field = "@message",
+  ts_format_string = "y-M-d'T'H:m:s.S",
+  timestamp_us_extractor = ts_traits.default_us_extractor,
+  timestamp_filter = ts_traits.default_ts_filter
 )
 
 val storeBuilder = Store.Builder(

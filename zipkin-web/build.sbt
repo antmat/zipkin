@@ -1,6 +1,6 @@
 import NativePackagerHelper._
 
-enablePlugins(JavaServerAppPackaging)
+enablePlugins(DebianPlugin)
 
 javaOptions in Universal ++= Seq(
   "-zipkin.web.port=:8888",
@@ -12,6 +12,8 @@ javaOptions in Universal ++= Seq(
 name := "zipkin-web"
 
 version := "1.1.0"
+
+debianChangelog in Debian := Some(file("zipkin-web/changelog"))
 
 maintainer := "Anton Matveenko <antmat@yandex-team.ru>"
 
