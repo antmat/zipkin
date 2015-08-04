@@ -16,6 +16,8 @@ packageSummary := "zipkin query backend"
 
 packageDescription := "Zipkin backend to fetch span data"
 
+debianPackageDependencies := Seq.newBuilder[String].+=("oracle-j2sdk1.7").result()
+
 linuxPackageMappings in Debian += ( packageMapping(
   file("zipkin-query-service/config/query-elastic.scala") ->
   "/etc/zipkin-query-service/query-elastic.scala"

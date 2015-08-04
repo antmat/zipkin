@@ -19,6 +19,6 @@ packageSummary := "zipkin web interface package"
 
 packageDescription := "Web interface for zipkin. Provides ability to analyze trace data of distributed system"
 
-debianPackageDependencies := Seq.newBuilder[String].+=("zipkin-query-service").result()
+debianPackageDependencies := Seq.newBuilder[String].+=("zipkin-query-service", "oracle-j2sdk1.7").result()
 
 mappings in Universal ++= directory("zipkin-web/src/main/resources/")

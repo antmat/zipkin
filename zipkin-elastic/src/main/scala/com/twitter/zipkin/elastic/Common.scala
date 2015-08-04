@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.{Calendar, Date, HashMap, TimeZone}
 
 import com.sksamuel.elastic4s.ElasticClient
-import com.twitter.logging.Logger
+import com.twitter.logging._
 import com.twitter.util.{Future, Promise}
 import org.elasticsearch.common.settings.ImmutableSettings
 import org.elasticsearch.search.SearchHit
@@ -26,6 +26,8 @@ class Common (
                index_format: String,
                host: String,
                port: Int,
+               log_file: String,
+               log_level: Option[Level],
                val timestamp_field: String = "timestamp",
                val trace_id_field: String = "trace_id",
                val span_id_field: String = "span_id",
@@ -38,6 +40,33 @@ class Common (
                val timestamp_us_extractor: (String) => Long = ts_traits.default_us_extractor,
                val timestamp_filter: (String) => String = ts_traits.default_ts_filter
                ){
+
+  def handlers: List[() => Handler] = {
+    val output = log_file
+    val level = Some(log_level)
+    var handler =
+      if (output == "/dev/stderr" || output == "")
+        ConsoleHandler(level = log_level)
+      else
+        FileHandler(
+          output,
+          Policy.Never,
+          true,
+          -1,
+          level = log_level
+        )
+    handler :: Nil
+  }
+
+  def loggerFactories: List[LoggerFactory] = {
+    LoggerFactory(
+      node = "",
+      level = log_level,
+      handlers = handlers
+    ) :: Nil
+  }
+
+  Logger.configure(loggerFactories)
 
   val default_us_extractor = (ts:String) => {
 

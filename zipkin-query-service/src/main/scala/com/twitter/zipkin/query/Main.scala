@@ -16,14 +16,15 @@
  */
 package com.twitter.zipkin.query
 
-import com.twitter.logging.Logger
+import com.twitter.logging._
 import com.twitter.ostrich.admin.{ServiceTracker, RuntimeEnvironment}
 import com.twitter.util.Eval
 import com.twitter.zipkin.builder.Builder
 import com.twitter.zipkin.BuildProperties
 
 object Main {
-  val log = Logger.get(getClass.getName)
+
+  var log = Logger.get(getClass.getName)
 
   def main(args: Array[String]) {
     log.info("Loading configuration")
@@ -32,6 +33,8 @@ object Main {
 
     try {
       val server = builder.apply().apply(runtime)
+      // Update logger
+      log = Logger.get(getClass.getName)
       server.start()
       ServiceTracker.register(server)
     } catch {
