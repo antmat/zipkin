@@ -441,6 +441,7 @@ class Handlers(jsonGenerator: ZipkinJson, mustacheGenerator: ZipkinMustache) {
     }
 
     val data = Map[String, Object](
+      "traceId" -> trace.id.get.toHexString,
       "duration" -> durationStr(traceDuration),
       "services" -> serviceDurations.map(_.size),
       "depth" -> combo.spanDepths.map(_.values.max),
