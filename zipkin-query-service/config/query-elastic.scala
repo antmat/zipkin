@@ -18,8 +18,7 @@ object ts_traits {
 val el = new Common(
   cluster_name = "ape-test-cloud",
   index_format = "'test12ape-rsyslog-'yyyy-MM-dd",
-  host = "elastic01d.tst.ape",
-  port = 9300,
+  es_connection_string = "elasticsearch://elastic01d.tst.ape:9300,elastic02d.tst.ape:9300,elastic03d.tst.ape:9300",
   timestamp_field = "@timestamp",
   trace_id_field = "trace_id",
   span_id_field = "span_id",

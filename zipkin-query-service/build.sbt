@@ -3,6 +3,7 @@ enablePlugins(LinuxPlugin)
 enablePlugins(JavaServerAppPackaging)
 
 javaOptions in Universal ++= Seq(
+  "-Djava.net.preferIPv6Addresses=true",
   "-f /etc/zipkin-query-service/query-elastic.scala"
 )
 

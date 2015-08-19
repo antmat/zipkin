@@ -3,7 +3,7 @@ package com.twitter.zipkin.elastic
 import java.text.SimpleDateFormat
 import java.util.{Calendar, Date, HashMap, TimeZone}
 
-import com.sksamuel.elastic4s.ElasticClient
+import com.sksamuel.elastic4s.{ElasticsearchClientUri, ElasticClient}
 import com.twitter.logging._
 import com.twitter.util.{Future, Promise}
 import org.elasticsearch.common.settings.ImmutableSettings
@@ -24,8 +24,7 @@ object ts_traits {
 class Common (
                cluster_name: String,
                index_format: String,
-               host: String,
-               port: Int,
+               es_connection_string: String,
                val timestamp_field: String = "timestamp",
                val trace_id_field: String = "trace_id",
                val span_id_field: String = "span_id",
@@ -42,8 +41,7 @@ class Common (
   val ec: ExecutionContext = ExecutionContext.global
   val client: ElasticClient = ElasticClient.remote(
     ImmutableSettings.builder().put("cluster.name", cluster_name).build(),
-    host,
-    port
+    ElasticsearchClientUri(es_connection_string)
   )
 
   val log = Logger.get(getClass.getName)
