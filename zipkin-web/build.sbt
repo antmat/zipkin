@@ -13,7 +13,7 @@ javaOptions in Universal ++= Seq(
 
 name := "zipkin-web"
 
-version := "1.1.0"
+version := "1.1.0-1"
 
 debianChangelog in Debian := Some(file("zipkin-web/debian/changelog"))
 

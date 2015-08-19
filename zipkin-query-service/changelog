@@ -3,3 +3,9 @@ zipkin-query-service (1.1.0) unstable; urgency=low
   * Initial release
 
  -- Anton Matveenko <antmat@yandex-team.ru>  Tue, 04 Aug 2015 17:12:10 +0500
+
+zipkin-query-service (1.1.0-1) unstable; urgency=low
+
+  * Use es connection string and prefer ipv6
+
+ -- Anton Matveenko <antmat@yandex-team.ru>  Tue, 04 Aug 2015 17:12:10 +0500
