@@ -1,11 +1,19 @@
-zipkin-query-service (1.1.0) unstable; urgency=low
+zipkin-query-service (1.1.0-2) unstable; urgency=low
 
-  * Initial release
+  * Fix exeception on overflowed trace_id values.
 
- -- Anton Matveenko <antmat@yandex-team.ru>  Tue, 04 Aug 2015 17:12:10 +0500
+ -- Anton Matveenko <antmat@yandex-team.ru>  Thu, 20 Aug 2015 13:21:10 +0300
 
 zipkin-query-service (1.1.0-1) unstable; urgency=low
 
   * Use es connection string and prefer ipv6
 
  -- Anton Matveenko <antmat@yandex-team.ru>  Tue, 04 Aug 2015 17:12:10 +0500
+
+zipkin-query-service (1.1.0) unstable; urgency=low
+
+  * Initial release
+
+ -- Anton Matveenko <antmat@yandex-team.ru>  Tue, 04 Aug 2015 17:12:10 +0500
+
+
