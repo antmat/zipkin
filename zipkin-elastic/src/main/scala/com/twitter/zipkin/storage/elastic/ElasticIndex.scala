@@ -70,7 +70,7 @@ trait ElasticIndex extends Index {
         ag.getBuckets.asScala.map (
           b => {
             //1.5 version
-            val t_id = IndexedTraceId(b.getKeyAsNumber.longValue(), b.getAggregations().get("ts").asInstanceOf[Min].value().toLong)
+            val t_id = IndexedTraceId(elastic.id_parser(b.getKeyAsText.string()), b.getAggregations().get("ts").asInstanceOf[Min].value().toLong)
 
             //1.4 version
 //            val t_id = IndexedTraceId(b.getKeyAsNumber.longValue(), b.getAggregations().get("ts").asInstanceOf[Min].getValue().toLong)
@@ -83,16 +83,37 @@ trait ElasticIndex extends Index {
   }
   override def getTraceIdsByAnnotation(serviceName: String, annotation: String, value: Option[ByteBuffer],
                                        endTs: Long, limit: Int): Future[Seq[IndexedTraceId]] = {
-    throw new NotImplementedError
-    elastic.log.debug("getTraceIdsByAnnotation")
+
+    elastic.log.debug("getTraceIdsByAnnotation: " + serviceName + ", annotation: " + annotation + ", limit: " + limit.toString);
+
     elastic.ScalaFutureOps(elastic.client.execute(
-      { search in "" query "" aggs(agg terms "trace_id")}
+    {
+      search in elastic.get_index(endTs) query
+        elastic.message_field + ":" + annotation postFilter
+        rangeFilter(elastic.timestamp_field).lte(elastic.ts_format(endTs)) postFilter
+        queryFilter(query (elastic.service_name_field+":"+serviceName)) sort
+        (by field elastic.timestamp_field) aggs(
+        agg terms elastic.trace_id_field field elastic.trace_id_field size (limit)
+          aggs(
+          agg min "ts" field elastic.timestamp_field
+          )
+        ) searchType SearchType.Count
+    }
     ) ).asTwitter(elastic.ec) map {
-      sr =>
-        sr.getHits().hits().map(
-          sh =>
-            IndexedTraceId(sh.field("trace_id").getValue[Long](), elastic.ts_convert(sh))
+      sr => {
+        val ag = sr.getAggregations().get(elastic.trace_id_field).asInstanceOf[Terms]
+        ag.getBuckets.asScala.map (
+          b => {
+            //1.5 version
+            val t_id = IndexedTraceId(elastic.id_parser(b.getKeyAsText.string()), b.getAggregations().get("ts").asInstanceOf[Min].value().toLong)
+
+            //1.4 version
+            //            val t_id = IndexedTraceId(b.getKeyAsNumber.longValue(), b.getAggregations().get("ts").asInstanceOf[Min].getValue().toLong)
+            elastic.log.debug("TraceID:" + t_id.timestamp + "," + t_id.traceId)
+            t_id
+          }
         )
+      }
     }
   }
 

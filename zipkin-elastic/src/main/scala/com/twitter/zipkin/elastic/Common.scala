@@ -21,6 +21,12 @@ object ts_traits {
   }
 }
 
+object trace_traits {
+  def default_id_parser = (id:String) => {
+    java.lang.Long.parseLong(id, 16)
+  }
+}
+
 class Common (
                cluster_name: String,
                index_format: String,
@@ -35,7 +41,8 @@ class Common (
                val message_field: String = "message",
                val ts_format_string: String = "y-M-d'T'H:m:s.S",
                val timestamp_us_extractor: (String) => Long = ts_traits.default_us_extractor,
-               val timestamp_filter: (String) => String = ts_traits.default_ts_filter
+               val timestamp_filter: (String) => String = ts_traits.default_ts_filter,
+               val id_parser: (String) => Long = trace_traits.default_id_parser
                ){
 
   val ec: ExecutionContext = ExecutionContext.global
