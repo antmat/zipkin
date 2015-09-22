@@ -25,6 +25,9 @@ object trace_traits {
   def default_id_parser = (id:String) => {
     java.lang.Long.parseLong(id, 16)
   }
+  def default_id_generator = (id:Long) => {
+    id.toHexString
+  }
 }
 
 class Common (
@@ -42,7 +45,8 @@ class Common (
                val ts_format_string: String = "y-M-d'T'H:m:s.S",
                val timestamp_us_extractor: (String) => Long = ts_traits.default_us_extractor,
                val timestamp_filter: (String) => String = ts_traits.default_ts_filter,
-               val id_parser: (String) => Long = trace_traits.default_id_parser
+               val id_parser: (String) => Long = trace_traits.default_id_parser,
+               val id_generator: (Long) => String = trace_traits.default_id_generator
                ){
 
   val ec: ExecutionContext = ExecutionContext.global
@@ -76,10 +80,10 @@ class Common (
   }
 
   def get_index(time_ms:Long): String = {
-    log.debug("FORMAT ms" + time_ms.toString)
+    //log.debug("FORMAT ms" + time_ms.toString)
     val d = new Date()
     d.setTime(time_ms/1000)
-    log.debug("FORMAT RES:" + format.format(d))
+    //log.debug("FORMAT RES:" + format.format(d))
     format.format(d)
   }
 

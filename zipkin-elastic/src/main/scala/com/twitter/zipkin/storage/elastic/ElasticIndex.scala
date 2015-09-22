@@ -55,8 +55,8 @@ trait ElasticIndex extends Index {
     elastic.ScalaFutureOps(elastic.client.execute(
     {
       search in elastic.get_index(endTs) query
-        elastic.service_name_field+":"+serviceName postFilter
-        rangeFilter(elastic.timestamp_field).lte(elastic.ts_format(endTs)) sort
+        elastic.service_name_field+":"+serviceName sort /* postFilter
+        rangeFilter(elastic.timestamp_field).lte(elastic.ts_format(endTs)) sort*/
         (by field elastic.timestamp_field) aggs(
         agg terms elastic.trace_id_field field elastic.trace_id_field size (limit)
         aggs(

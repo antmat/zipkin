@@ -75,7 +75,7 @@ trait ElasticStorage extends Storage {
   private[this] def fetchTraceById(traceId: Long): Future[Option[Seq[Span]]] = {
     elastic.log.debug("fetchTraceById: "+ traceId)
     elastic.ScalaFutureOps(elastic.client.execute(
-      { search in elastic.get_index() query elastic.trace_id_field+":\""+traceId+"\"" limit(10000)}
+      { search in elastic.get_index() query elastic.trace_id_field+":\""+elastic.id_generator(traceId)+"\"" limit(10000)}
     ) ).asTwitter(elastic.ec) map {
       sr =>
         Some(sr.getHits().hits().map(
@@ -85,28 +85,34 @@ trait ElasticStorage extends Storage {
             val p_id = map.get(elastic.parent_id_field)
             var parent_id: Option[Long] = None
             if (p_id != null) {
-              val p_id_val = p_id.asInstanceOf[Number].longValue()
+              val p_id_val = elastic.id_parser(p_id.asInstanceOf[String])
               if (p_id_val != 0) {
                 parent_id = Some(p_id_val)
               }
             }
             val ann_builder = List.newBuilder[Annotation]
+            var service_name = map.get(elastic.service_name_field).asInstanceOf[String];
+            if(service_name == null) {
+              elastic.log.debug("SH:"+ sh.sourceAsMap().toString);
+              service_name = "<unknown>"
+            }
             ann_builder += new Annotation(
               elastic.ts_convert(sh),
               sh.sourceAsMap().get(elastic.message_field).asInstanceOf[String],
-              Some(Endpoint(0, 0, map.get(elastic.service_name_field).asInstanceOf[String])),
+              Some(Endpoint(0, 0, service_name)),
               None
             )
-            elastic.log.debug("SH:"+ sh.sourceAsMap().toString);
+            //elastic.log.debug("SH:"+ sh.sourceAsMap().toString);
+            //elastic.log.debug("SNAME:" + map.get(elastic.service_name_field).asInstanceOf[String]);
             val span = Span(
-              map.get(elastic.trace_id_field).asInstanceOf[Number].longValue(),
+              elastic.id_parser(map.get(elastic.trace_id_field).asInstanceOf[String]),
               map.get(elastic.span_name_field).asInstanceOf[String],
-              map.get(elastic.span_id_field).asInstanceOf[Number].longValue(),
+              elastic.id_parser(map.get(elastic.span_id_field).asInstanceOf[String]),
               parent_id,
               ann_builder.result(),
               Seq.empty
             )
-            elastic.log.debug("(" + traceId + ")SPAN:" + span.toString)
+            //elastic.log.debug("(" + traceId + ")SPAN:" + span.toString)
             span
           }
         ).toSeq)
