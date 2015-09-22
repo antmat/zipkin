@@ -1,8 +1,8 @@
-zipkin-web (1.1.0) unstable; urgency=low
+zipkin-web (1.1.0-2) unstable; urgency=low
 
-  * Initial release
+  * Add cocaine logo. Add trace id on page.
 
- -- Anton Matveenko <antmat@yandex-team.ru>  Tue, 04 Aug 2015 17:12:10 +0500
+ -- Anton Matveenko <antmat@yandex-team.ru>  Wed, 19 Aug 2015 14:33:10 +0300
 
 zipkin-web (1.1.0-1) unstable; urgency=low
 
@@ -10,8 +10,9 @@ zipkin-web (1.1.0-1) unstable; urgency=low
 
  -- Anton Matveenko <antmat@yandex-team.ru>  Wed, 19 Aug 2015 14:33:10 +0300
 
-zipkin-web (1.1.0-2) unstable; urgency=low
+zipkin-web (1.1.0) unstable; urgency=low
 
-  * Add cocaine logo. Add trace id on page.
+  * Initial release
 
- -- Anton Matveenko <antmat@yandex-team.ru>  Wed, 19 Aug 2015 14:33:10 +0300
+ -- Anton Matveenko <antmat@yandex-team.ru>  Tue, 04 Aug 2015 17:12:10 +0500
+

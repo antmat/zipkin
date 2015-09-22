@@ -1,3 +1,9 @@
+zipkin-query-service (1.1.0-3) unstable; urgency=low
+
+  * Use hex traces. Configurable parser.
+
+ -- Anton Matveenko <antmat@yandex-team.ru>  Thu, 20 Aug 2015 13:21:10 +0300
+
 zipkin-query-service (1.1.0-2) unstable; urgency=low
 
   * Fix exeception on overflowed trace_id values.
