@@ -9,7 +9,7 @@ javaOptions in Universal ++= Seq(
 
 name := "zipkin-query-service"
 
-version := "1.1.0-4"
+version := "1.1.0-5"
 
 maintainer := "Anton Matveenko <antmat@yandex-team.ru>"
 

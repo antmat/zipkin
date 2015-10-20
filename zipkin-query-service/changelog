@@ -1,3 +1,10 @@
+zipkin-query-service (1.1.0-5) unstable; urgency=low
+
+  * fix for null span_name.
+  * fix for trace_id from previous day
+
+ -- Anton Matveenko <antmat@yandex-team.ru>  Tue, 20 Oct 2015 12:12:10 +0300
+
 zipkin-query-service (1.1.0-4) unstable; urgency=low
 
   * Really use hex traces. Avoid nullptr in service name.
