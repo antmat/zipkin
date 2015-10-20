@@ -140,7 +140,7 @@ trait ElasticIndex extends Index {
     elastic.ScalaFutureOps(elastic.client.execute(
     {
       search in elastic.get_index() query elastic.service_name_field + ":*" aggs(
-          agg terms elastic.service_name_field field elastic.service_name_field
+          agg terms elastic.service_name_field field elastic.service_name_field size (10000)
         ) searchType SearchType.Count
     }
     ) ).asTwitter(elastic.ec) map {

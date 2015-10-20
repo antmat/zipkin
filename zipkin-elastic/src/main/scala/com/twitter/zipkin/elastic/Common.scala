@@ -3,7 +3,7 @@ package com.twitter.zipkin.elastic
 import java.text.SimpleDateFormat
 import java.util.{Calendar, Date, HashMap, TimeZone}
 
-import com.sksamuel.elastic4s.{ElasticsearchClientUri, ElasticClient}
+import com.sksamuel.elastic4s.{IndexesTypes, ElasticsearchClientUri, ElasticClient}
 import com.twitter.logging._
 import com.twitter.util.{Future, Promise}
 import org.elasticsearch.common.settings.ImmutableSettings
@@ -77,6 +77,16 @@ class Common (
 
     log.debug("FORMAT:" + format.format(today))
     format.format(today)
+  }
+
+  def get_indexes(): IndexesTypes  = {
+    val today = Calendar.getInstance().getTime()
+    val yesterday = new Date()
+    yesterday.setTime(today.getTime() - 86400*1000)
+
+    log.debug("FORMAT:" + format.format(today))
+    log.debug("FORMAT:" + format.format(yesterday))
+    IndexesTypes(Seq[String](format.format(yesterday), format.format(today)), Seq[String]())
   }
 
   def get_index(time_ms:Long): String = {
