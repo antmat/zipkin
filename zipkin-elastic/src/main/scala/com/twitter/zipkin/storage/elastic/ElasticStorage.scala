@@ -75,7 +75,7 @@ trait ElasticStorage extends Storage {
   private[this] def fetchTraceById(traceId: Long): Future[Option[Seq[Span]]] = {
     elastic.log.debug("fetchTraceById: "+ traceId)
     elastic.ScalaFutureOps(elastic.client.execute(
-      { search in elastic.get_indexes() query elastic.trace_id_field+":\""+elastic.id_generator(traceId)+"\"" limit(10000)}
+      { search in elastic.get_index() query elastic.trace_id_field+":\""+elastic.id_generator(traceId)+"\"" limit(10000)}
     ) ).asTwitter(elastic.ec) map {
       sr => {
         Some(sr.getHits().hits().map(

@@ -26,8 +26,9 @@ class Handlers(jsonGenerator: ZipkinJson, mustacheGenerator: ZipkinMustache) {
   type Renderer = (Response => Unit)
 
   case class ErrorRenderer(code: Int, msg: String) extends Renderer {
+    val data: Map[String, Object] = Map("errorMsg" -> msg)
     def apply(response: Response) {
-      response.contentString = msg
+      response.contentString = mustacheGenerator.render("error.mustache", data)
       response.statusCode = code
     }
   }

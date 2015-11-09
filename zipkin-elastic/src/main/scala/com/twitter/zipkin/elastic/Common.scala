@@ -1,7 +1,9 @@
 package com.twitter.zipkin.elastic
 
+import java.math.BigInteger
 import java.text.SimpleDateFormat
-import java.util.{Calendar, Date, HashMap, TimeZone}
+import java.math
+import java.util.{TimeZone, Calendar, Date, HashMap}
 
 import com.sksamuel.elastic4s.{IndexesTypes, ElasticsearchClientUri, ElasticClient}
 import com.twitter.logging._
@@ -22,8 +24,9 @@ object ts_traits {
 }
 
 object trace_traits {
-  def default_id_parser = (id:String) => {
-    java.lang.Long.parseLong(id, 16)
+  def default_id_parser = (id_str: String) => {
+    val id: BigInteger = new BigInteger(id_str, 16)
+    id.longValue()
   }
   def default_id_generator = (id:Long) => {
     id.toHexString
@@ -59,6 +62,8 @@ class Common (
 
   val format = new SimpleDateFormat(index_format)
 
+  format.setTimeZone(TimeZone.getTimeZone("UTC"))
+
   implicit class ScalaFutureOps[A](sf: ScalaFuture[A]) {
     def asTwitter(implicit ec: ExecutionContext): Future[A] = {
       val tp = new Promise[A]
@@ -72,21 +77,22 @@ class Common (
     }
   }
 
+  def get_indexes(): IndexesTypes  = {
+    val idx_builder = List.newBuilder[String]
+    for( step <- 1 to 96) {
+      val d = new Date()
+      d.setTime(d.getTime() - 3600 * step)
+
+      idx_builder+=(format.format(d))
+    }
+    IndexesTypes(idx_builder.result(), Seq[String]())
+  }
+
   def get_index(): String = {
     val today = Calendar.getInstance().getTime()
 
     log.debug("FORMAT:" + format.format(today))
     format.format(today)
-  }
-
-  def get_indexes(): IndexesTypes  = {
-    val today = Calendar.getInstance().getTime()
-    val yesterday = new Date()
-    yesterday.setTime(today.getTime() - 86400*1000)
-
-    log.debug("FORMAT:" + format.format(today))
-    log.debug("FORMAT:" + format.format(yesterday))
-    IndexesTypes(Seq[String](format.format(yesterday), format.format(today)), Seq[String]())
   }
 
   def get_index(time_ms:Long): String = {
