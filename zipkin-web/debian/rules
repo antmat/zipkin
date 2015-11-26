@@ -4,7 +4,8 @@
 	dh $@
 
 override_dh_auto_build:
-	../gradlew --project-cache-dir ../gradle-cache/ :zipkin-web:build
+	mkdir -p ../gradle-build-cache/
+	../gradlew -g ../gradle-build-cache/ --project-cache-dir ../gradle-build-cache/ :zipkin-web:build
 
 override_dh_auto_install:
 	mkdir -p debian/zipkin-web/usr/share/zipkin-web/lib
