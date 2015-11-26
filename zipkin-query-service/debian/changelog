@@ -1,3 +1,10 @@
+zipkin-query-service (1.1.0-6) unstable; urgency=low
+
+  * Merge with upstream
+  * Fully rewritten logic. Performance fixes.
+
+ -- Anton Matveenko <antmat@yandex-team.ru>  Thu, 26 Nov 2015 11:41:00 +0300
+
 zipkin-query-service (1.1.0-5) unstable; urgency=low
 
   * fix for null span_name.

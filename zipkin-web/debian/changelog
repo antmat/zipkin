@@ -3,7 +3,7 @@ zipkin-web (1.1.0-3) unstable; urgency=low
   * Merge with upstream.
   * Checkbox for duration sorting.
 
- -- Anton Matveenko <antmat@yandex-team.ru>  Wed, 19 Aug 2015 14:33:10 +0300
+ -- Anton Matveenko <antmat@yandex-team.ru>  Thu, 26 Nov 2015 11:42:00 +0300
 
 zipkin-web (1.1.0-2) unstable; urgency=low
 
