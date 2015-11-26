@@ -2,17 +2,14 @@ Source: zipkin-web
 Section: java
 Priority: optional
 Maintainer: Anton Matveenko <antmat@me.com>
-Build-Depends: debhelper (>= 9),
-               javahelper
+Build-Depends: debhelper (>= 9)
 Standards-Version: 3.9.6
 Vcs-Git: https://github.com/antmat/zipkin.git 
 Vcs-Browser: https://github.com/antmat/zipkin
 
 Package: zipkin-web
 Architecture: all
-Depends: ${misc:Depends},
-         libcommons-io-java (>= 2.1),
-         libcommons-lang-java (>= 2.6),
+Depends: ${misc:Depends}
 Description: zipkin-web
 
 
