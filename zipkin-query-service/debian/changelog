@@ -1,4 +1,4 @@
-zipkin-query-service (1.1.0-6) unstable; urgency=low
+zipkin-query-service (1.22.2-1) unstable; urgency=low
 
   * Merge with upstream
   * Fully rewritten logic. Performance fixes.

@@ -1,12 +1,5 @@
 zipkin-web (1.22.2-1) unstable; urgency=low
 
-  * Version bump
-  * Remove unused dependencies
-
- -- Anton Matveenko <antmat@yandex-team.ru>  Thu, 26 Nov 2015 11:42:00 +0300
-
-zipkin-web (1.1.0-3) unstable; urgency=low
-
   * Merge with upstream.
   * Checkbox for duration sorting.
 
