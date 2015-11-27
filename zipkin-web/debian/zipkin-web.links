@@ -1,2 +1,1 @@
-/usr/share/zipkin-web/conf /etc/zipkin-web
 /usr/share/zipkin-web/bin/zipkin-web /usr/bin/zipkin-web

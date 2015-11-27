@@ -10,9 +10,9 @@ override_dh_auto_build:
 override_dh_auto_install:
 	mkdir -p debian/zipkin-query-service/usr/share/zipkin-query-service/lib
 	mkdir -p debian/zipkin-query-service/usr/share/zipkin-query-service/bin
-	mkdir -p debian/zipkin-query-service/usr/share/zipkin-query-service/conf
+	mkdir -p debian/zipkin-query-service/etc/zipkin-query-service/
 	mkdir -p debian/zipkin-query-service/var/log/zipkin-query-service
 	install build/libs/zipkin-query-service-*-all.jar debian/zipkin-query-service/usr/share/zipkin-query-service/lib
 	install -T debian/zipkin-query-service-start.sh debian/zipkin-query-service/usr/share/zipkin-query-service/bin/zipkin-query-service
-	install debian/application.ini debian/zipkin-query-service/usr/share/zipkin-query-service/conf/
-	install debian/config.scala debian/zipkin-query-service/usr/share/zipkin-query-service/conf/
+	install debian/application.ini debian/zipkin-query-service/etc/zipkin-query-service/
+	install debian/config.scala debian/zipkin-query-service/etc/zipkin-query-service/

@@ -11,9 +11,9 @@ override_dh_auto_install:
 	mkdir -p debian/zipkin-web/usr/share/zipkin-web/lib
 	mkdir -p debian/zipkin-web/usr/share/zipkin-web/bin
 	mkdir -p debian/zipkin-web/usr/share/zipkin-web/resources
-	mkdir -p debian/zipkin-web/usr/share/zipkin-web/conf
+	mkdir -p debian/zipkin-web/etc/zipkin-web/conf
 	mkdir -p debian/zipkin-web/var/log/zipkin-web
 	cp -r src/main/resources/* debian/zipkin-web/usr/share/zipkin-web/resources/
 	install build/libs/zipkin-web-*-all.jar debian/zipkin-web/usr/share/zipkin-web/lib
 	install -T debian/zipkin-web-start.sh debian/zipkin-web/usr/share/zipkin-web/bin/zipkin-web
-	install debian/application.ini debian/zipkin-web/usr/share/zipkin-web/conf/
+	install debian/application.ini debian/zipkin-web/etc/zipkin-web/
