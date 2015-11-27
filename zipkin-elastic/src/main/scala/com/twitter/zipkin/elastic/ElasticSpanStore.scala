@@ -58,7 +58,7 @@ class SpanGenerator(trace_id: Long, name: String, id: Long, parent_id: Option[Lo
       parent_id,
       Some(duration.min_ts),
       Some(duration.value()),
-      annotation_builder.toList
+      annotation_builder.toList.sortBy(_.timestamp)
     )
   }
 }
@@ -293,7 +293,7 @@ extends SpanStore
           span_gen_pair => {
             span_gen_pair._2.get
           }
-        ).sortWith(_.annotations.head.timestamp < _.annotations.head.timestamp)
+        ).sortWith(_.timestamp.get < _.timestamp.get)
       }
     ).sortWith(_.head.timestamp.get < _.head.timestamp.get)
   }
