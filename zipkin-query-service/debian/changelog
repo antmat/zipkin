@@ -1,3 +1,9 @@
+zipkin-query-service (1.22.2-3) unstable; urgency=low
+
+  * Caching fix
+
+ -- Anton Matveenko <antmat@yandex-team.ru>  Tue, 02 Dec 2015 13:28:00 +0300
+
 zipkin-query-service (1.22.2-2) unstable; urgency=low
 
   * Proper span ordering.
