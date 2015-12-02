@@ -107,9 +107,11 @@ class Common (
   def get_indexes(start: Int, end: Int, initial_time:Long = System.currentTimeMillis()): IndexesTypes  = {
     val idx_builder = new scala.collection.mutable.ListBuffer[String]
     val date = new Date()
+    val current_time = date.getTime
     var step = start
     while(step < end || (idx_builder.isEmpty && step < max_index_lookback)) {
-      date.setTime(initial_time - 3600000 * step)
+      val idx_time = initial_time - 3600000 * step
+      date.setTime(idx_time)
       val idx_name = index_formatter.format(date)
       if(indexes.contains(idx_name)) {
         idx_builder += idx_name
@@ -123,14 +125,15 @@ class Common (
         if(res.isExists) {
           indexes += idx_name
           idx_builder += idx_name
-        } else if (step != 0) {
+        } else if (idx_time < current_time - 3600000) {
+          // Index will not be created. Cache it.
           non_existing_indexes += idx_name
           log.warning("Skipping non existing index:" + idx_name)
         } else {
-          log.warning("Skipping non existing index:" + idx_name)
+          log.warning("Skipping non existing index (no cache):" + idx_name)
         }
       } else {
-        log.warning("Skipping non existing index:" + idx_name)
+        log.warning("Skipping non existing index (cached):" + idx_name)
       }
       step += 1
     }
